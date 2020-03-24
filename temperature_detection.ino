@@ -1,4 +1,3 @@
-#include <LiquidCrystal.h>
 #include <Adafruit_MLX90614.h>
 
 typedef enum {
