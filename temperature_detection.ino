@@ -45,7 +45,7 @@ void loop() {
     Serial.print("Object temperature (celsius degrees): ");
     Serial.print(object_temperature);
   
-    delay(1000);
+    delay(250);
     if (distance > 30) {
         set_indicator_status(OFF);
     } else if (distance > 20) {
@@ -54,14 +54,14 @@ void loop() {
         set_indicator_status(DISTANCE_NEARLY_RIGHT);
     } else if (distance <= 15) {
         set_indicator_status(DISTANCE_RIGHT);
-        delay(2000);
+        delay(1000);
         if (temperature_sensor.readObjectTempC() > 20) {
             set_indicator_status(FEVER_WARNING);
         } else {
             set_indicator_status(FEVER_OK);
         }
         // Wait for the person to go away
-        while(distance < 20) delay(500);
+        while(distance < 20) delay(250);
     }
 }
 
