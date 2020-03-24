@@ -6,31 +6,30 @@ typedef enum {
     FEVER_OK,
     FEVER_WARNING,
     DISTANCE_RIGHT,
-    DISTANCE_TOO_FAR,
-    DISTANCE_TOO_CLOSE,
     DISTANCE_NEARLY_RIGHT,
+    DISTANCE_TOO_FAR
 } indicator_status;
 
 int ultrasound_measure_distance();
 void set_indicator_status(indicator_status status);
 Adafruit_MLX90614 temperature_sensor = Adafruit_MLX90614();
 
-const int no_fever_indicator_pin = 8;
+const int fever_indicator_pin = 8;
 const int ultrasound_trigger_pin = 9;
 const int ultrasound_echo_pin = 10;
-const int too_close_indicator_pin = 11;
-const int too_far_indicator_pin = 12;
-const int right_distance_indicator_pin = 13;
+const int orange_indicator_pin = 11;
+const int red_indicator_pin = 12;
+const int green_indicator_pin = 13;
 
 
 void setup() {
     Serial.begin(9600);
     pinMode(ultrasound_echo_pin, INPUT);
     pinMode(ultrasound_trigger_pin, OUTPUT);
-    pinMode(no_fever_indicator_pin, OUTPUT);
-    pinMode(right_distance_indicator_pin, OUTPUT);
-    pinMode(too_close_indicator_pin, OUTPUT);
-    pinMode(too_far_indicator_pin, OUTPUT);
+    pinMode(fever_indicator_pin, OUTPUT);
+    pinMode(green_indicator_pin, OUTPUT);
+    pinMode(orange_indicator_pin, OUTPUT);
+    pinMode(red_indicator_pin, OUTPUT);
     temperature_sensor.begin();
 }
 
@@ -47,21 +46,23 @@ void loop() {
     Serial.print("Object temperature (celsius degrees): ");
     Serial.print(object_temperature);
   
-    if (distance >= 20) {
+    delay(1000);
+    if (distance > 30) {
+        set_indicator_status(OFF);
+    } else if (distance > 20) {
         set_indicator_status(DISTANCE_TOO_FAR);
-        delay(1000);
-    } else if (distance >= 15) {
+    } else if (distance > 15) {
         set_indicator_status(DISTANCE_NEARLY_RIGHT);
-        delay(1000);
-    } else if (distance < 15) {
+    } else if (distance <= 15) {
         set_indicator_status(DISTANCE_RIGHT);
-        delay(3000);
+        delay(2000);
         if (temperature_sensor.readObjectTempC() > 20) {
             set_indicator_status(FEVER_WARNING);
         } else {
             set_indicator_status(FEVER_OK);
         }
-        delay(3000);
+        // Wait for the person to go away
+        while(distance < 20) delay(500);
     }
 }
 
@@ -81,40 +82,40 @@ int ultrasound_measure_distance() {
 void set_indicator_status(indicator_status status) {
     switch(status) {
         case OFF:
-            digitalWrite(too_far_indicator_pin, LOW);
-            digitalWrite(too_close_indicator_pin, LOW);
-            digitalWrite(right_distance_indicator_pin, LOW);
-            digitalWrite(no_fever_indicator_pin, LOW);
+            digitalWrite(red_indicator_pin, LOW);
+            digitalWrite(orange_indicator_pin, LOW);
+            digitalWrite(green_indicator_pin, LOW);
+            digitalWrite(fever_indicator_pin, LOW);
             return;
         case DISTANCE_TOO_FAR:
-            digitalWrite(too_far_indicator_pin, HIGH);
-            digitalWrite(too_close_indicator_pin, LOW);
-            digitalWrite(right_distance_indicator_pin, LOW);
-            digitalWrite(no_fever_indicator_pin, LOW);
+            digitalWrite(red_indicator_pin, HIGH);
+            digitalWrite(orange_indicator_pin, LOW);
+            digitalWrite(green_indicator_pin, LOW);
+            digitalWrite(fever_indicator_pin, LOW);
             return;
-        case DISTANCE_TOO_CLOSE:
-            digitalWrite(too_far_indicator_pin, LOW);
-            digitalWrite(too_close_indicator_pin, HIGH);
-            digitalWrite(right_distance_indicator_pin, LOW);
-            digitalWrite(no_fever_indicator_pin, LOW);
+        case DISTANCE_NEARLY_RIGHT:
+            digitalWrite(red_indicator_pin, LOW);
+            digitalWrite(orange_indicator_pin, HIGH);
+            digitalWrite(green_indicator_pin, LOW);
+            digitalWrite(fever_indicator_pin, LOW);
             return;
         case DISTANCE_RIGHT:
-            digitalWrite(too_far_indicator_pin, LOW);
-            digitalWrite(too_close_indicator_pin, LOW);
-            digitalWrite(right_distance_indicator_pin, HIGH);
-            digitalWrite(no_fever_indicator_pin, LOW);
+            digitalWrite(red_indicator_pin, LOW);
+            digitalWrite(orange_indicator_pin, LOW);
+            digitalWrite(green_indicator_pin, HIGH);
+            digitalWrite(fever_indicator_pin, LOW);
             return;
         case FEVER_OK:
-            digitalWrite(too_far_indicator_pin, LOW);
-            digitalWrite(too_close_indicator_pin, LOW);
-            digitalWrite(right_distance_indicator_pin, LOW);
-            digitalWrite(no_fever_indicator_pin, HIGH);
+            digitalWrite(red_indicator_pin, LOW);
+            digitalWrite(orange_indicator_pin, LOW);
+            digitalWrite(green_indicator_pin, LOW);
+            digitalWrite(fever_indicator_pin, HIGH);
             return;
         case FEVER_WARNING:
-            digitalWrite(too_far_indicator_pin, HIGH);
-            digitalWrite(too_close_indicator_pin, HIGH);
-            digitalWrite(right_distance_indicator_pin, HIGH);
-            digitalWrite(no_fever_indicator_pin, HIGH);
+            digitalWrite(red_indicator_pin, HIGH);
+            digitalWrite(orange_indicator_pin, LOW);
+            digitalWrite(green_indicator_pin, LOW);
+            digitalWrite(fever_indicator_pin, HIGH);
             return;
     }
 }
