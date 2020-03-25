@@ -1,0 +1,39 @@
+Parts list with price estimates for design without a viewfinder.
+Arduino Uno
+$23.38 x Qty: 1
+
+Infrared Thermometer - MLX90614
+$14.78 x Qty: 1
+
+4.7K Ohm Resistor
+$0.1 x Qty: 2
+
+Capacitor Ceramic 100nF
+$0.64 x Qty: 1
+
+USB Cable A to B
+$3.26 x Qty: 1
+
+LED - Basic Green 5mm
+$0.33 x Qty: 2
+
+330 Ohm Resistor
+$0.1 x Qty: 2
+
+Ultrasonic Sensor - HC-SR04
+$3.95 x Qty: 1
+
+LED - Basic Yellow 5mm
+$0.35 x Qty: 1
+
+220 Ohm Resistor
+$0.1 x Qty: 3
+
+LED - Basic Red 5mm
+$0.36 x Qty: 2
+
+BreadBoard
+$8.25 x Qty: 1
+
+Jumper Wires Pack - M/M
+$1.95 x Qty: 2
