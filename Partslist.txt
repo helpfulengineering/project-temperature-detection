@@ -1,3 +1,4 @@
+Circuit.io https://www.circuito.io/app?components=512,9570,9590,9590,9591,9591,9594,11021,13959
 Parts list with price estimates for design without a viewfinder.
 Arduino Uno
 $23.38 x Qty: 1
