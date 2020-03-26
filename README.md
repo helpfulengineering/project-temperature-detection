@@ -13,19 +13,19 @@ Initial idea is represented in the picture, taking the user from the first inter
 It assumes the mirror alignment but does not go into detail about it yet. 
 It also lacks the user experience after the outcome communication. 
 
-![UX](docs/img/Uxv2.jpeg)
+![UX](documentation/images/Uxv2.jpeg)
 
 ## Functional diagram
 
-![diagram](docs/img/Functional_diagramm_of_the_temperature_detection.png)
+![diagram](documentation/images/Functional_diagramm_of_the_temperature_detection.png)
 
-## [Solutions state of the art](docs/state-of-the-art.md)
+## [Solutions state of the art](documentation/state-of-the-art.md)
 
-## [Components](docs/components.md)
+## [Components](documentation/components.md)
 
-## [How to setup your Arduino environment](docs/setup.md)
+## [How to setup your Arduino environment](documentation/setup.md)
 
-## [Others topics](docs/others.md)
+## [Others topics](documentation/others.md)
 
 
 
