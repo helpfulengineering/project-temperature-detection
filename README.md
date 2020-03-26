@@ -1,20 +1,32 @@
 # Hardware temperature detection project
 
-Project to build a simple, cheap open source fever detection devise. The aim is to allow symptomatic people to be quickly isolated.
+Project to build a simple, cheap, open source fever detection device. The aim is to allow symptomatic people to be quickly isolated.
 
-## Setup you environment with Arduino IDE (the easiest if you don't know PlatformIO)
+On slack channel [#hardware-temperature-detection](https://app.slack.com/client/TUTSYURT3/CVCEV2V0V/thread/CV96HC6DN-1584885987.479600) from helpfulengineering.slack.com
 
-* First download the last version of the Arduino IDE from the arduino [website](https://www.arduino.cc/en/Main/Software)
-* Download temperature_detection code from the [project page](https://github.com/helpfulengineering/project-temperature-detection) and unzip it
-* Add to your IDE environment the Adafruit MLX90614 Library version 1.0.1:
-* Sketch->Include Library-> Manage Libraries
-* Search for Adafruit MLX90614
-* Install the version 1.0.1
-* Open the file temperature-detection.ino from temperature-detection folder
+Fast fever detection followed by isolation reduces the spread of infectious diseases.
 
-## Setup you environment with PlatformIO (the best if you want to contribute)
+## User Experience
 
-* First download the last version of the Visual Studio Code VSC  [website](https://code.visualstudio.com/)
-* Add the PIO extension [PlatformIO](https://platformio.org/)
-* Download temperature_detection code from the [project page](https://github.com/helpfulengineering/project-temperature-detection) and unzip it
-* Open the folder temperature_detection_project with VSC
+Journey a user goes through to use the system
+Initial idea is represented in the picture, taking the user from the first interface with the device to the result feedback. 
+It assumes the mirror alignment but does not go into detail about it yet. 
+It also lacks the user experience after the outcome communication. 
+
+![UX](docs/img/Uxv2.jpeg)
+
+## Functional diagram
+
+![diagram](docs/img/Functional_diagramm_of_the_temperature_detection.png)
+
+## [Solutions state of the art](docs/state-of-the-art.md)
+
+## [Components](docs/components.md)
+
+## [How to setup your Arduino environment](docs/setup.md)
+
+## [Others topics](docs/others.md)
+
+
+
+
