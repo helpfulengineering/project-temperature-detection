@@ -21,6 +21,8 @@ It also lacks the user experience after the outcome communication.
 
 ## [Solutions state of the art](documentation/state-of-the-art.md)
 
+## [Requirements](documentation/requirements.md)
+
 ## [Components](documentation/components.md)
 
 ## [How to setup your Arduino environment](documentation/setup.md)
