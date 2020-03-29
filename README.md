@@ -2,7 +2,7 @@
 
 Project to build a simple, cheap, open source fever detection device. The aim is to allow symptomatic people to be quickly isolated.
 
-On slack channel [#hardware-temperature-detection](https://app.slack.com/client/TUTSYURT3/CVCEV2V0V/thread/CV96HC6DN-1584885987.479600) from helpfulengineering.slack.com
+On slack channel [#hardware-temperature-detection](https://app.slack.com/client/TUTSYURT3/CVCEV2V0V/thread/CV96HC6DN-1584885987.479600) from [helpfulengineering.slack.com](https://helpfulengineering.slack.com/)
 
 Fast fever detection followed by isolation reduces the spread of infectious diseases.
 
