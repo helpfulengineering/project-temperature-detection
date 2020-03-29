@@ -19,13 +19,7 @@ It also lacks the user experience after the outcome communication.
 
 ![diagram](documentation/images/Functional_diagramm_of_the_temperature_detection.png)
 
-## [Solutions state of the art](documentation/state-of-the-art.md)
-
-## [Components](documentation/components.md)
-
-## [How to setup your Arduino environment](documentation/setup.md)
-
-## [Others topics](documentation/others.md)
+## [Project wiki](https://github.com/helpfulengineering/project-temperature-detection/wiki)
 
 
 
