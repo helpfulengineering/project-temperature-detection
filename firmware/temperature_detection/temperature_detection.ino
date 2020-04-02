@@ -35,8 +35,8 @@ void setup() {
 
 void loop() {
     int distance = ultrasound_measure_distance();
-    int ambient_temperature = temperature_sensor.readAmbientTempC();
-    int object_temperature = temperature_sensor.readObjectTempC();
+    float ambient_temperature = temperature_sensor.readAmbientTempC();
+    float object_temperature = temperature_sensor.readObjectTempC();
     
     Serial.print("Distance (centimeters): ");
     Serial.println(distance);
