@@ -23,9 +23,9 @@ Adafruit_MLX90614 temperature_sensor = Adafruit_MLX90614();
 
 const int ultrasound_trigger_pin = 2;
 const int ultrasound_echo_pin = 3;
-const int orange_indicator_pin = 4;
-const int red_indicator_pin = 5;
-const int green_indicator_pin = 6;
+const int green_indicator_pin = 4;
+const int orange_indicator_pin = 5;
+const int red_indicator_pin = 6;
 
 
 void setup() {    
