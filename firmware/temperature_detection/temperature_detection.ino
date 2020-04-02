@@ -1,76 +1,73 @@
 #include <Adafruit_MLX90614.h>
 
-typedef enum {
-    OFF,
-    FEVER_OK,
-    FEVER_WARNING,
-    DISTANCE_RIGHT,
-    DISTANCE_NEARLY_RIGHT,
-    DISTANCE_TOO_FAR
-} indicator_status;
 
-int ultrasound_measure_distance();
-void set_indicator_status(indicator_status status);
+typedef enum {
+    INDICATOR_RED = 1 << 0,
+    INDICATOR_ORANGE = 1 << 1,
+    INDICATOR_GREEN = 1 << 2
+} indicator;
+
+typedef enum {
+    STATUS_FEVER_LOW = INDICATOR_ORANGE || INDICATOR_GREEN,
+    STATUS_FEVER_HIGH = INDICATOR_ORANGE || INDICATOR_RED,
+    STATUS_DISTANCE_RIGHT = INDICATOR_GREEN,
+    STATUS_DISTANCE_WRONG = INDICATOR_RED,
+    STATUS_OFF = 0
+} status;
+
+
+int measure_distance();
+float measure_temperature();
+void display_status(status indicators);
 Adafruit_MLX90614 temperature_sensor = Adafruit_MLX90614();
 
-const int fever_indicator_pin = 8;
-const int ultrasound_trigger_pin = 9;
-const int ultrasound_echo_pin = 10;
-const int orange_indicator_pin = 11;
-const int red_indicator_pin = 12;
-const int green_indicator_pin = 13;
+const int ultrasound_trigger_pin = 2;
+const int ultrasound_echo_pin = 3;
+const int orange_indicator_pin = 4;
+const int red_indicator_pin = 5;
+const int green_indicator_pin = 6;
 
 
-void setup() {
-    Serial.begin(9600);
+void setup() {    
     pinMode(ultrasound_echo_pin, INPUT);
     pinMode(ultrasound_trigger_pin, OUTPUT);
     pinMode(fever_indicator_pin, OUTPUT);
     pinMode(green_indicator_pin, OUTPUT);
     pinMode(orange_indicator_pin, OUTPUT);
     pinMode(red_indicator_pin, OUTPUT);
+
+    Serial.begin(9600);
+    
     #ifdef ESP32
-    Wire.begin(0,26);
+        Wire.begin(0,26);
     #else
-    temperature_sensor.begin();
+        temperature_sensor.begin();
     #endif
 }
 
 
 void loop() {
-    int distance = ultrasound_measure_distance();
-    float ambient_temperature = temperature_sensor.readAmbientTempC();
-    float object_temperature = temperature_sensor.readObjectTempC();
-    
-    Serial.print("Distance (centimeters): ");
-    Serial.println(distance);
-    Serial.print("Ambient temperature (celsius degrees): ");
-    Serial.print(ambient_temperature);
-    Serial.print("Object temperature (celsius degrees): ");
-    Serial.print(object_temperature);
-  
+    int distance = measure_distance();
+
     delay(250);
-    if (distance > 30) {
-        set_indicator_status(OFF);
-    } else if (distance > 20) {
-        set_indicator_status(DISTANCE_TOO_FAR);
+    if (distance > 25) {
+        display_status(STATUS_OFF);
     } else if (distance > 15) {
-        set_indicator_status(DISTANCE_NEARLY_RIGHT);
+        display_status(STATUS_DISTANCE_WRONG);
     } else if (distance <= 15) {
-        set_indicator_status(DISTANCE_RIGHT);
-        delay(1000);
-        if (temperature_sensor.readObjectTempC() > 20) {
-            set_indicator_status(FEVER_WARNING);
-        } else {
-            set_indicator_status(FEVER_OK);
-        }
-        // Wait for the person to go away
-        while(distance < 20) delay(250);
+        display_status(STATUS_DISTANCE_RIGHT);
+        delay(3500); // Wait for the sensor to stabilize.
+        display_status(
+            (measure_temperature() > 20)
+            ? STATUS_FEVER_HIGH : STATUS_FEVER_LOW
+        );
+        // Wait for the person to go away...
+        while(measure_distance() <= 25) delay(250);
     }
 }
 
 
-int ultrasound_measure_distance() {
+int measure_distance() {
     digitalWrite(ultrasound_trigger_pin, LOW);
     delayMicroseconds(2);
     digitalWrite(ultrasound_trigger_pin, HIGH);
@@ -82,43 +79,22 @@ int ultrasound_measure_distance() {
 }
 
 
-void set_indicator_status(indicator_status status) {
-    switch(status) {
-        case OFF:
-            digitalWrite(red_indicator_pin, LOW);
-            digitalWrite(orange_indicator_pin, LOW);
-            digitalWrite(green_indicator_pin, LOW);
-            digitalWrite(fever_indicator_pin, LOW);
-            return;
-        case DISTANCE_TOO_FAR:
-            digitalWrite(red_indicator_pin, HIGH);
-            digitalWrite(orange_indicator_pin, LOW);
-            digitalWrite(green_indicator_pin, LOW);
-            digitalWrite(fever_indicator_pin, LOW);
-            return;
-        case DISTANCE_NEARLY_RIGHT:
-            digitalWrite(red_indicator_pin, LOW);
-            digitalWrite(orange_indicator_pin, HIGH);
-            digitalWrite(green_indicator_pin, LOW);
-            digitalWrite(fever_indicator_pin, LOW);
-            return;
-        case DISTANCE_RIGHT:
-            digitalWrite(red_indicator_pin, LOW);
-            digitalWrite(orange_indicator_pin, LOW);
-            digitalWrite(green_indicator_pin, HIGH);
-            digitalWrite(fever_indicator_pin, LOW);
-            return;
-        case FEVER_OK:
-            digitalWrite(red_indicator_pin, LOW);
-            digitalWrite(orange_indicator_pin, LOW);
-            digitalWrite(green_indicator_pin, LOW);
-            digitalWrite(fever_indicator_pin, HIGH);
-            return;
-        case FEVER_WARNING:
-            digitalWrite(red_indicator_pin, HIGH);
-            digitalWrite(orange_indicator_pin, LOW);
-            digitalWrite(green_indicator_pin, LOW);
-            digitalWrite(fever_indicator_pin, HIGH);
-            return;
-    }
+float measure_temperature() {
+    return temperature_sensor.readObjectTempC(); // in celsius degrees
+}
+
+
+void display_status(status indicators) {
+    digitalWrite(
+        red_indicator_pin,
+        (indicators && INDICATOR_RED) ? HIGH : LOW
+    );
+    digitalWrite(
+        orange_indicator_pin,
+        (indicators && INDICATOR_ORANGE) ? HIGH : LOW
+    );
+    digitalWrite(
+        green_indicator_pin,
+        (indicators && INDICATOR_GREEN) ? HIGH : LOW
+    );
 }
