@@ -29,7 +29,11 @@ void setup() {
     pinMode(green_indicator_pin, OUTPUT);
     pinMode(orange_indicator_pin, OUTPUT);
     pinMode(red_indicator_pin, OUTPUT);
+    #ifdef ESP32
+    Wire.begin(0,26);
+    #else
     temperature_sensor.begin();
+    #endif
 }
 
 
