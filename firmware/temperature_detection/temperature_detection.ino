@@ -1,3 +1,4 @@
+#include "user_config.h"
 #include <Adafruit_MLX90614.h>
 
 
@@ -21,25 +22,17 @@ float measure_temperature();
 void display_status(status indicators);
 Adafruit_MLX90614 temperature_sensor = Adafruit_MLX90614();
 
-const int ultrasound_trigger_pin = 2;
-const int ultrasound_echo_pin = 3;
-const int green_indicator_pin = 4;
-const int orange_indicator_pin = 5;
-const int red_indicator_pin = 6;
-
-
 void setup() {    
     pinMode(ultrasound_echo_pin, INPUT);
     pinMode(ultrasound_trigger_pin, OUTPUT);
-    pinMode(fever_indicator_pin, OUTPUT);
     pinMode(green_indicator_pin, OUTPUT);
     pinMode(orange_indicator_pin, OUTPUT);
     pinMode(red_indicator_pin, OUTPUT);
 
-    Serial.begin(9600);
+    Serial.begin(serial_monitor_speed);
     
     #ifdef ESP32
-        Wire.begin(0,26);
+        Wire.begin(sda_pin,scl_pin);
     #else
         temperature_sensor.begin();
     #endif
@@ -49,20 +42,20 @@ void setup() {
 void loop() {
     int distance = measure_distance();
 
-    delay(250);
-    if (distance > 25) {
+    delay(time_between_readings);
+    if (distance > off_distance) {
         display_status(STATUS_OFF);
-    } else if (distance > 15) {
+    } else if (distance > dectection_distance) {
         display_status(STATUS_DISTANCE_WRONG);
-    } else if (distance <= 15) {
+    } else if (distance <= dectection_distance) {
         display_status(STATUS_DISTANCE_RIGHT);
-        delay(3500); // Wait for the sensor to stabilize.
+        delay(time_before_sensor_stab); // Wait for the sensor to stabilize.
         display_status(
-            (measure_temperature() > 20)
+            (measure_temperature() > limit_fever)
             ? STATUS_FEVER_HIGH : STATUS_FEVER_LOW
         );
         // Wait for the person to go away...
-        while(measure_distance() <= 25) delay(250);
+        while(measure_distance() <= 25) delay(time_before_leaving);
     }
 }
 
