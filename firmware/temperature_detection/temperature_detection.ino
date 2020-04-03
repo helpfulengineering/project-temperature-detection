@@ -36,26 +36,35 @@ void setup() {
     #else
         temperature_sensor.begin();
     #endif
+    Serial.println("Setup done");
 }
 
 
 void loop() {
     int distance = measure_distance();
+    Serial.println("distance");
+    Serial.println(distance);
 
     delay(time_between_readings);
+
     if (distance > off_distance) {
+        Serial.println("You are too far, not processing");
         display_status(STATUS_OFF);
     } else if (distance > dectection_distance) {
+        Serial.println("Could you get closer please?");
         display_status(STATUS_DISTANCE_WRONG);
     } else if (distance <= dectection_distance) {
+        Serial.println("You are at a good distance, calculating temperature");
         display_status(STATUS_DISTANCE_RIGHT);
         delay(time_before_sensor_stab); // Wait for the sensor to stabilize.
+        Serial.println("Temperature measurement");
+        Serial.println(measure_temperature());
         display_status(
             (measure_temperature() > limit_fever)
             ? STATUS_FEVER_HIGH : STATUS_FEVER_LOW
         );
         // Wait for the person to go away...
-        while(measure_distance() <= 25) delay(time_before_leaving);
+        while(measure_distance() <= next_person_distance) delay(time_before_leaving);
     }
 }
 
