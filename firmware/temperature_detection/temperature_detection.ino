@@ -32,7 +32,7 @@ void setup() {
     Serial.begin(serial_monitor_speed);
     
     #ifdef ESP32
-        Wire.begin(sda_pin,scl_pin);
+        Wire.begin(sda_pin, scl_pin);
     #else
         temperature_sensor.begin();
     #endif
