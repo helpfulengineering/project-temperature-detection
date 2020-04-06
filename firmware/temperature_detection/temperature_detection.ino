@@ -74,9 +74,8 @@ void loop() {
 
 
 int measure_distance(size_t samples) {
-    if(samples == 0) samples = 1; // sanity check
     float measurements = 0;
-    for(size_t counter = 0; counter < samples; counter++) {
+    for(size_t counter = 0; counter < (samples || 1); counter++) {
         digitalWrite(ultrasound_trigger_pin, LOW);
         delayMicroseconds(2);
         digitalWrite(ultrasound_trigger_pin, HIGH);
@@ -85,17 +84,16 @@ int measure_distance(size_t samples) {
         long duration = pulseIn(ultrasound_echo_pin, HIGH);
         measurements += duration * 0.034 / 2;
     }
-    return measurements / samples; // average in centimeters
+    return measurements / (samples || 1); // average in centimeters
 }
 
 
 float measure_temperature(size_t samples) {
-    if(samples == 0) samples = 1; // sanity check
     float measurements = 0;
-    for(size_t counter = 0; counter < samples; counter++) {
+    for(size_t counter = 0; counter < (samples || 1); counter++) {
         measurements += temperature_sensor.readObjectTempC();
     }
-    return measurements / samples; // average in celsius degrees
+    return measurements / (samples || 1); // average in celsius degrees
 }
 
 
