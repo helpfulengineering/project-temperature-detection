@@ -13,6 +13,10 @@
 #define orange_indicator_pin    5
 #define red_indicator_pin       6 // if you want to use the built in UNO led you can set 13
 
+// Sampling average size
+#define temperature_samples  3
+#define distance_samples     5
+
 #ifdef ESP32 // pin definition for ESP32 only
 #define sda_pin                 0
 #define scl_pin                 26
