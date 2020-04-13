@@ -18,8 +18,8 @@ typedef enum {
 
 
 void display_status(status indicators);
-float measure_temperature(size_t samples);
-int measure_distance(size_t samples);
+float measure_temperature(size_t samples, int interval);
+int measure_distance(size_t samples, int interval);
 
 Adafruit_MLX90614 temperature_sensor = Adafruit_MLX90614();
 
@@ -73,7 +73,7 @@ void loop() {
 }
 
 
-int measure_distance(size_t samples) {
+int measure_distance(size_t samples, int interval) {
     float measurements = 0;
     for(size_t counter = 0; counter < (samples || 1); counter++) {
         digitalWrite(ultrasound_trigger_pin, LOW);
@@ -83,15 +83,17 @@ int measure_distance(size_t samples) {
         digitalWrite(ultrasound_trigger_pin, LOW);
         long duration = pulseIn(ultrasound_echo_pin, HIGH);
         measurements += duration * 0.034 / 2;
+        delay(interval);
     }
     return measurements / (samples || 1); // average in centimeters
 }
 
 
-float measure_temperature(size_t samples) {
+float measure_temperature(size_t samples, int interval) {
     float measurements = 0;
     for(size_t counter = 0; counter < (samples || 1); counter++) {
         measurements += temperature_sensor.readObjectTempC();
+        delay(interval);
     }
     return measurements / (samples || 1); // average in celsius degrees
 }
