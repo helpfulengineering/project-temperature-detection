@@ -14,8 +14,10 @@
 #define red_indicator_pin       6 // if you want to use the built in UNO led you can set 13
 
 // Sampling average size
-#define temperature_samples  3
-#define distance_samples     5
+#define temperature_samples     3
+#define temperature_interval    250 // need to be confirmed
+#define distance_samples        5
+#define distance_interval       100 // 60ms minimum recommended in the Sparkfun datasheet of HC-SR04
 
 #ifdef ESP32 // pin definition for ESP32 only
 #define sda_pin                 0

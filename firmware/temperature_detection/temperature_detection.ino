@@ -43,7 +43,7 @@ void setup() {
 
 
 void loop() {
-    int distance = measure_distance(distance_samples);
+    int distance = measure_distance(distance_samples, distance_interval);
     Serial.println("distance");
     Serial.println(distance);
 
@@ -60,13 +60,13 @@ void loop() {
         display_status(STATUS_DISTANCE_RIGHT);
         delay(time_before_sensor_stab); // Wait for the sensor to stabilize.
         Serial.println("Temperature measurement");
-        Serial.println(measure_temperature(temperature_samples));
+        Serial.println(measure_temperature(temperature_samples, temperature_interval));
         display_status(
-            (measure_temperature(temperature_samples) > limit_fever)
+            (measure_temperature(temperature_samples, temperature_interval) > limit_fever)
             ? STATUS_FEVER_HIGH : STATUS_FEVER_LOW
         );
         // Wait for the person to go away...
-        while(measure_distance(distance_samples) <= next_person_distance) {
+        while(measure_distance(distance_samples, distance_interval) <= next_person_distance) {
             delay(time_before_leaving);
         }
     }
