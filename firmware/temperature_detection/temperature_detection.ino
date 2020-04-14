@@ -17,12 +17,14 @@ typedef enum {
 } status;
 
 
-int measure_distance();
-float measure_temperature();
 void display_status(status indicators);
+float measure_temperature(size_t samples, int interval);
+int measure_distance(size_t samples, int interval);
+
 Adafruit_MLX90614 temperature_sensor = Adafruit_MLX90614();
 
-void setup() {    
+
+void setup() {
     pinMode(ultrasound_echo_pin, INPUT);
     pinMode(ultrasound_trigger_pin, OUTPUT);
     pinMode(green_indicator_pin, OUTPUT);
@@ -30,7 +32,7 @@ void setup() {
     pinMode(red_indicator_pin, OUTPUT);
 
     Serial.begin(serial_monitor_speed);
-    
+
     #ifdef ESP32
         Wire.begin(sda_pin, scl_pin);
     #else
@@ -41,7 +43,7 @@ void setup() {
 
 
 void loop() {
-    int distance = measure_distance();
+    int distance = measure_distance(distance_samples, distance_interval);
     Serial.println("distance");
     Serial.println(distance);
 
@@ -58,31 +60,42 @@ void loop() {
         display_status(STATUS_DISTANCE_RIGHT);
         delay(time_before_sensor_stab); // Wait for the sensor to stabilize.
         Serial.println("Temperature measurement");
-        Serial.println(measure_temperature());
+        Serial.println(measure_temperature(temperature_samples, temperature_interval));
         display_status(
-            (measure_temperature() > limit_fever)
+            (measure_temperature(temperature_samples, temperature_interval) > limit_fever)
             ? STATUS_FEVER_HIGH : STATUS_FEVER_LOW
         );
         // Wait for the person to go away...
-        while(measure_distance() <= next_person_distance) delay(time_before_leaving);
+        while(measure_distance(distance_samples, distance_interval) <= next_person_distance) {
+            delay(time_before_leaving);
+        }
     }
 }
 
 
-int measure_distance() {
-    digitalWrite(ultrasound_trigger_pin, LOW);
-    delayMicroseconds(2);
-    digitalWrite(ultrasound_trigger_pin, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(ultrasound_trigger_pin, LOW);
-    long duration = pulseIn(ultrasound_echo_pin, HIGH);
-    int distance = duration * 0.034 / 2;
-    return distance; // in centimeters
+int measure_distance(size_t samples, int interval) {
+    float measurements = 0;
+    for(size_t counter = 0; counter < (samples || 1); counter++) {
+        digitalWrite(ultrasound_trigger_pin, LOW);
+        delayMicroseconds(2);
+        digitalWrite(ultrasound_trigger_pin, HIGH);
+        delayMicroseconds(10);
+        digitalWrite(ultrasound_trigger_pin, LOW);
+        long duration = pulseIn(ultrasound_echo_pin, HIGH);
+        measurements += duration * 0.034 / 2;
+        delay(interval);
+    }
+    return measurements / (samples || 1); // average in centimeters
 }
 
 
-float measure_temperature() {
-    return temperature_sensor.readObjectTempC(); // in celsius degrees
+float measure_temperature(size_t samples, int interval) {
+    float measurements = 0;
+    for(size_t counter = 0; counter < (samples || 1); counter++) {
+        measurements += temperature_sensor.readObjectTempC();
+        delay(interval);
+    }
+    return measurements / (samples || 1); // average in celsius degrees
 }
 
 
