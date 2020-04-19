@@ -1,36 +1,35 @@
-#ifndef user_config_h
-#define user_config_h
+#ifndef USER_CONFIG_H
+#define USER_CONFIG_H
 
-#define serial_monitor_speed    9600 // serial monitor speed
-#define time_between_readings   500 // time between sensors readings in ms
-#define time_before_leaving     250 // time between sensors readings in ms
-#define time_before_sensor_stab 3500
+// Pins
+#define ULTRASOUND_TRIGGER_PIN  2
+#define ULTRASOUND_ECHO_PIN     3
+#define GREEN_INDICATOR_PIN     4
+#define ORANGE_INDICATOR_PIN    5
+#define RED_INDICATOR_PIN       6 // 13 to use Arduino Uno builtin LED
 
-// Pins definition
-#define ultrasound_trigger_pin  2
-#define ultrasound_echo_pin     3
-#define green_indicator_pin     4
-#define orange_indicator_pin    5
-#define red_indicator_pin       6 // if you want to use the built in UNO led you can set 13
+// Times (bauds and milliseconds)
+#define SERIAL_MONITOR_SPEED    9600
+#define TIME_BETWEEN_READINGS   500
+#define SENSOR_STABILIZATION    3500
 
-// Sampling average size
-#define temperature_samples     3
-#define temperature_interval    250 // need to be confirmed
-#define distance_samples        5
-#define distance_interval       100 // 60ms minimum recommended in the Sparkfun datasheet of HC-SR04
+// Sampling (count and milliseconds)
+#define TEMPERATURE_SAMPLES     3
+#define TEMPERATURE_INTERVAL    500
+#define DISTANCE_SAMPLES        5
+#define DISTANCE_INTERVAL       100 // > 60 as per Sparkfun HC-SR04 datasheet
 
-#ifdef ESP32 // pin definition for ESP32 only
-#define sda_pin                 0
-#define scl_pin                 26
+// Distances (centimeters)
+#define OFF_DISTANCE            30
+#define DETECTION_DISTANCE      15
+
+// Temperatures (celsius degrees)
+#define LIMIT_FEVER             20
+
+// ESP32-specific
+#ifdef ESP32
+#define ESP32_SDA_PIN           0
+#define ESP32_SCL_PIN           26
 #endif
-
-// Distances limits in cm
-#define off_distance            30
-#define dectection_distance     20
-#define limit_distance          15
-#define next_person_distance    25
-
-// Temperature limits
-#define limit_fever             20
 
 #endif
