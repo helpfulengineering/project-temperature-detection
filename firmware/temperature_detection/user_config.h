@@ -1,12 +1,16 @@
 #ifndef USER_CONFIG_H
 #define USER_CONFIG_H
 
+// Switches
+#define ENABLE_SONAR
+
 // Pins
 #define ULTRASOUND_TRIGGER_PIN  2
 #define ULTRASOUND_ECHO_PIN     3
 #define GREEN_INDICATOR_PIN     4
 #define ORANGE_INDICATOR_PIN    5
 #define RED_INDICATOR_PIN       6 // 13 to use Arduino Uno builtin LED
+#define BUTTON_PIN              7
 
 // Times (bauds and milliseconds)
 #define SERIAL_MONITOR_SPEED    9600

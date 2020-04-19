@@ -13,6 +13,7 @@ typedef enum {
     STATUS_FEVER_HIGH = INDICATOR_ORANGE || INDICATOR_RED,
     STATUS_DISTANCE_RIGHT = INDICATOR_GREEN,
     STATUS_DISTANCE_WRONG = INDICATOR_RED,
+    STATUS_TRIGGER = STATUS_DISTANCE_RIGHT,
     STATUS_OFF = 0
 } status;
 
@@ -31,6 +32,7 @@ void setup() {
     pinMode(GREEN_INDICATOR_PIN, OUTPUT);
     pinMode(ORANGE_INDICATOR_PIN, OUTPUT);
     pinMode(RED_INDICATOR_PIN, OUTPUT);
+    pinMode(BUTTON_PIN, INPUT_PULLUP);
 
     Serial.begin(SERIAL_MONITOR_SPEED);
 
@@ -45,7 +47,9 @@ void setup() {
 
 
 void loop() {
-    while(!trigger(STATUS_DISTANCE_RIGHT)) delay(TIME_BETWEEN_READINGS);
+    while(!trigger(STATUS_TRIGGER)) {
+        delay(TIME_BETWEEN_READINGS);
+    }
 
     delay(SENSOR_STABILIZATION);
     float temperature = measure_temperature(
@@ -61,29 +65,38 @@ void loop() {
     Serial.println("Temperature (in celsius degrees): ");
     Serial.println(temperature);
 
-    while(!trigger(STATUS_OFF)) delay(TIME_BETWEEN_READINGS);
+    while(!trigger(STATUS_OFF)) {
+        delay(TIME_BETWEEN_READINGS);
+    }
 }
 
 
 bool trigger(status event) {
-    status detected_event;
-    int distance = measure_distance(
-        DISTANCE_SAMPLES,
-        DISTANCE_INTERVAL
-    );
+    status detected_event = STATUS_OFF;
 
-    Serial.println("Distance (in centimeters): ");
-    Serial.println(distance);
+    #ifdef ENABLE_SONAR
+        int distance = measure_distance(
+            DISTANCE_SAMPLES,
+            DISTANCE_INTERVAL
+        );
 
-    if (distance > OFF_DISTANCE) {
-        Serial.println("User is not present");
-        detected_event = STATUS_OFF;
-    } else if (distance > DETECTION_DISTANCE) {
-        Serial.println("User needs to get closer");
-        detected_event = STATUS_DISTANCE_WRONG;
-    } else if (distance <= DETECTION_DISTANCE) {
-        Serial.println("User is at a good distance");
-        detected_event = STATUS_DISTANCE_RIGHT;
+        Serial.println("Distance (in centimeters): ");
+        Serial.println(distance);
+
+        if (distance > OFF_DISTANCE) {
+            Serial.println("User is not present");
+            detected_event = STATUS_OFF;
+        } else if (distance > DETECTION_DISTANCE) {
+            Serial.println("User needs to get closer");
+            detected_event = STATUS_DISTANCE_WRONG;
+        } else if (distance <= DETECTION_DISTANCE) {
+            Serial.println("User is at a good distance");
+            detected_event = STATUS_DISTANCE_RIGHT;
+        }
+    #endif
+
+    if(digitalRead(BUTTON_PIN) == HIGH) {
+        detected_event = STATUS_TRIGGER;
     }
 
     display_status(detected_event);
