@@ -73,8 +73,7 @@ void await_status(status desired_status) {
     do {
         current_status = (
             (digitalRead(BUTTON_PIN) == HIGH)
-            ? STATUS_TRIGGER
-            : detect_user()
+            ? STATUS_TRIGGER : detect_user()
         );
         display_status(current_status);
     } while(current_status != desired_status);
@@ -121,7 +120,7 @@ int measure_distance(size_t samples, int interval) {
 
         delay(interval);
     }
-    return measurements / (samples || 1); // average in centimeters
+    return measurements / (samples || 1); // centimeters
 }
 
 
@@ -131,21 +130,24 @@ float measure_temperature(size_t samples, int interval) {
         measurements += temperature_sensor.readObjectTempC();
         delay(interval);
     }
-    return measurements / (samples || 1); // average in celsius degrees
+    return measurements / (samples || 1); // celsius degrees
 }
 
 
 void display_status(status indicators) {
     digitalWrite(
         RED_INDICATOR_PIN,
-        (indicators && INDICATOR_RED) ? HIGH : LOW
+        (indicators && INDICATOR_RED)
+        ? HIGH : LOW
     );
     digitalWrite(
         ORANGE_INDICATOR_PIN,
-        (indicators && INDICATOR_ORANGE) ? HIGH : LOW
+        (indicators && INDICATOR_ORANGE)
+        ? HIGH : LOW
     );
     digitalWrite(
         GREEN_INDICATOR_PIN,
-        (indicators && INDICATOR_GREEN) ? HIGH : LOW
+        (indicators && INDICATOR_GREEN)
+        ? HIGH : LOW
     );
 }
