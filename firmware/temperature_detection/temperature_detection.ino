@@ -13,14 +13,16 @@ typedef enum {
     STATUS_FEVER_HIGH = INDICATOR_ORANGE || INDICATOR_RED,
     STATUS_DISTANCE_RIGHT = INDICATOR_GREEN,
     STATUS_DISTANCE_WRONG = INDICATOR_RED,
+    STATUS_TRIGGER = STATUS_DISTANCE_RIGHT,
     STATUS_OFF = 0
 } status;
 
 
-bool trigger(status event);
-void display_status(status indicators);
 float measure_temperature(size_t samples, int interval);
 int measure_distance(size_t samples, int interval);
+void await_status(status desired_status);
+void display_status(status indicators);
+status detect_user();
 
 Adafruit_MLX90614 temperature_sensor = Adafruit_MLX90614();
 
@@ -31,6 +33,7 @@ void setup() {
     pinMode(GREEN_INDICATOR_PIN, OUTPUT);
     pinMode(ORANGE_INDICATOR_PIN, OUTPUT);
     pinMode(RED_INDICATOR_PIN, OUTPUT);
+    pinMode(BUTTON_PIN, INPUT_PULLUP);
 
     Serial.begin(SERIAL_MONITOR_SPEED);
 
@@ -45,7 +48,7 @@ void setup() {
 
 
 void loop() {
-    while(!trigger(STATUS_DISTANCE_RIGHT)) delay(TIME_BETWEEN_READINGS);
+    await_status(STATUS_TRIGGER);
 
     delay(SENSOR_STABILIZATION);
     float temperature = measure_temperature(
@@ -61,33 +64,45 @@ void loop() {
     Serial.println("Temperature (in celsius degrees): ");
     Serial.println(temperature);
 
-    while(!trigger(STATUS_OFF)) delay(TIME_BETWEEN_READINGS);
+    await_status(STATUS_OFF);
 }
 
 
-bool trigger(status event) {
-    status detected_event;
-    int distance = measure_distance(
-        DISTANCE_SAMPLES,
-        DISTANCE_INTERVAL
-    );
+void await_status(status desired_status) {
+    status current_status;
+    do {
+        current_status = (
+            (digitalRead(BUTTON_PIN) == HIGH)
+            ? STATUS_TRIGGER : detect_user()
+        );
+        display_status(current_status);
+    } while(current_status != desired_status);
+}
 
-    Serial.println("Distance (in centimeters): ");
-    Serial.println(distance);
 
-    if (distance > OFF_DISTANCE) {
-        Serial.println("User is not present");
-        detected_event = STATUS_OFF;
-    } else if (distance > DETECTION_DISTANCE) {
-        Serial.println("User needs to get closer");
-        detected_event = STATUS_DISTANCE_WRONG;
-    } else if (distance <= DETECTION_DISTANCE) {
-        Serial.println("User is at a good distance");
-        detected_event = STATUS_DISTANCE_RIGHT;
-    }
+status detect_user() {
+    #ifdef ENABLE_SONAR
+        int distance = measure_distance(
+            DISTANCE_SAMPLES,
+            DISTANCE_INTERVAL
+        );
 
-    display_status(detected_event);
-    return event == detected_event;
+        Serial.println("Distance (in centimeters): ");
+        Serial.println(distance);
+
+        if (distance > OFF_DISTANCE) {
+            Serial.println("User is not present");
+            return STATUS_OFF;
+        } else if (distance > DETECTION_DISTANCE) {
+            Serial.println("User needs to get closer");
+            return STATUS_DISTANCE_WRONG;
+        } else if (distance <= DETECTION_DISTANCE) {
+            Serial.println("User is at a good distance");
+            return STATUS_DISTANCE_RIGHT;
+        }
+    #else
+        return STATUS_OFF;
+    #endif
 }
 
 
@@ -105,7 +120,7 @@ int measure_distance(size_t samples, int interval) {
 
         delay(interval);
     }
-    return measurements / (samples || 1); // average in centimeters
+    return measurements / (samples || 1); // centimeters
 }
 
 
@@ -115,21 +130,24 @@ float measure_temperature(size_t samples, int interval) {
         measurements += temperature_sensor.readObjectTempC();
         delay(interval);
     }
-    return measurements / (samples || 1); // average in celsius degrees
+    return measurements / (samples || 1); // celsius degrees
 }
 
 
 void display_status(status indicators) {
     digitalWrite(
         RED_INDICATOR_PIN,
-        (indicators && INDICATOR_RED) ? HIGH : LOW
+        (indicators && INDICATOR_RED)
+        ? HIGH : LOW
     );
     digitalWrite(
         ORANGE_INDICATOR_PIN,
-        (indicators && INDICATOR_ORANGE) ? HIGH : LOW
+        (indicators && INDICATOR_ORANGE)
+        ? HIGH : LOW
     );
     digitalWrite(
         GREEN_INDICATOR_PIN,
-        (indicators && INDICATOR_GREEN) ? HIGH : LOW
+        (indicators && INDICATOR_GREEN)
+        ? HIGH : LOW
     );
 }
