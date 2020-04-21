@@ -56,13 +56,15 @@ void loop() {
         TEMPERATURE_INTERVAL
     );
 
+    Serial.println("Temperature (in celsius degrees): ");
+    Serial.println(temperature);
+
     display_status(
         (temperature > LIMIT_FEVER)
         ? STATUS_FEVER_HIGH : STATUS_FEVER_LOW
     );
 
-    Serial.println("Temperature (in celsius degrees): ");
-    Serial.println(temperature);
+
 
     await_status(STATUS_OFF);
 }
@@ -72,7 +74,7 @@ void await_status(status desired_status) {
     status current_status;
     do {
         current_status = (
-            (digitalRead(BUTTON_PIN) == HIGH)
+            (digitalRead(BUTTON_PIN) == LOW)
             ? STATUS_TRIGGER : detect_user()
         );
         display_status(current_status);
@@ -138,16 +140,16 @@ void display_status(status indicators) {
     digitalWrite(
         RED_INDICATOR_PIN,
         (indicators && INDICATOR_RED)
-        ? HIGH : LOW
+        ? HIGH - RED_INDICATOR_OFF : RED_INDICATOR_OFF - LOW
     );
     digitalWrite(
         ORANGE_INDICATOR_PIN,
         (indicators && INDICATOR_ORANGE)
-        ? HIGH : LOW
+        ? HIGH - ORANGE_INDICATOR_OFF : ORANGE_INDICATOR_OFF - LOW
     );
     digitalWrite(
         GREEN_INDICATOR_PIN,
         (indicators && INDICATOR_GREEN)
-        ? HIGH : LOW
+        ? HIGH - GREEN_INDICATOR_OFF : GREEN_INDICATOR_OFF - LOW
     );
 }
