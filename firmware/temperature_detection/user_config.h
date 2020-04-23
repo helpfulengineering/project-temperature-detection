@@ -2,7 +2,7 @@
 #define USER_CONFIG_H
 
 // Switches
-// #define ENABLE_SONAR
+#define ENABLE_SONAR
 // #define INVERT_INDICATORS
 // #define INVERT_BUTTON
 
