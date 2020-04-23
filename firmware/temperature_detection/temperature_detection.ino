@@ -9,8 +9,8 @@ typedef enum {
 } indicator;
 
 typedef enum {
-    STATUS_FEVER_LOW = INDICATOR_GREEN,
-    STATUS_FEVER_HIGH = INDICATOR_RED,
+    STATUS_FEVER_LOW = INDICATOR_ORANGE | INDICATOR_GREEN,
+    STATUS_FEVER_HIGH = INDICATOR_ORANGE | INDICATOR_RED,
     STATUS_DISTANCE_RIGHT = INDICATOR_GREEN,
     STATUS_DISTANCE_WRONG = INDICATOR_ORANGE,
     STATUS_TRIGGER = STATUS_DISTANCE_RIGHT,
@@ -49,8 +49,8 @@ void setup() {
 
 void loop() {
     await_status(STATUS_TRIGGER);
+    delay(SENSOR_STABILIZATION_TIME);
 
-    delay(SENSOR_STABILIZATION);
     float temperature = measure_temperature(
         TEMPERATURE_SAMPLES,
         TEMPERATURE_INTERVAL
@@ -59,22 +59,32 @@ void loop() {
     Serial.println("Temperature (in celsius degrees): ");
     Serial.println(temperature);
 
-    display_status(
-        (temperature > LIMIT_FEVER)
-        ? STATUS_FEVER_HIGH : STATUS_FEVER_LOW
-    );
-    (temperature > LIMIT_FEVER) ? Serial.println("Fever detected!") : Serial.println("You're OK!");
-    delay(DISPLAY_TIME);
+    if(temperature > LIMIT_FEVER) {
+        display_status(STATUS_FEVER_HIGH);
+        Serial.println("Fever detected");
+    } else {
+        display_status(STATUS_FEVER_LOW);
+        Serial.println("No fever detected");
+    }
 
+    delay(DISPLAY_TIME);
     await_status(STATUS_OFF);
 }
 
 
 void await_status(status desired_status) {
     status current_status;
+    int trigger_level;
+
+    #ifdef INVERT_BUTTON
+        trigger_level = LOW;
+    #else
+        trigger_level = HIGH;
+    #endif
+
     do {
         current_status = (
-            (digitalRead(BUTTON_PIN) == BUTTON_PIN_ON)
+            (digitalRead(BUTTON_PIN) == trigger_level)
             ? STATUS_TRIGGER : detect_user()
         );
         display_status(current_status);
@@ -137,19 +147,22 @@ float measure_temperature(size_t samples, int interval) {
 
 
 void display_status(status indicators) {
+    #ifdef INVERT_INDICATORS
+        indicators = ~indicators;
+    #endif
     digitalWrite(
         RED_INDICATOR_PIN,
-        (indicators == INDICATOR_RED)
-        ? HIGH - RED_INDICATOR_OFF : RED_INDICATOR_OFF - LOW
+        (indicators & INDICATOR_RED)
+        ? HIGH : LOW
     );
     digitalWrite(
         ORANGE_INDICATOR_PIN,
-        (indicators == INDICATOR_ORANGE)
-        ? HIGH - ORANGE_INDICATOR_OFF : ORANGE_INDICATOR_OFF - LOW
+        (indicators & INDICATOR_ORANGE)
+        ? HIGH : LOW
     );
     digitalWrite(
         GREEN_INDICATOR_PIN,
-        (indicators == INDICATOR_GREEN)
-        ? HIGH - GREEN_INDICATOR_OFF : GREEN_INDICATOR_OFF - LOW
+        (indicators & INDICATOR_GREEN)
+        ? HIGH : LOW
     );
 }
