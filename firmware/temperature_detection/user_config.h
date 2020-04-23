@@ -26,7 +26,9 @@
 #define RED_INDICATOR_OFF       0 // define if the LED status is HIGH (1) or LOW (0) when OFF
 #endif
 #define BUTTON_PIN              37 // 37 Btn A on M5StickC
-
+#ifndef BUTTON_PIN_ON
+#define BUTTON_PIN_ON           1 // define if the button has a LOW (0) or HIGH(1) status when pressed
+#endif
 // Times (bauds and milliseconds)
 #define SERIAL_MONITOR_SPEED    9600
 #define TIME_BETWEEN_READINGS   500
@@ -35,6 +37,10 @@
 #define SENSOR_STABILIZATION    3500
 #else
 #define SENSOR_STABILIZATION    0
+#endif
+
+#ifndef DISPLAY_TIME // Time defining the ms of LED are ON
+#define DISPLAY_TIME            2000
 #endif
 
 // Sampling (count and milliseconds)
@@ -48,7 +54,7 @@
 #define DETECTION_DISTANCE      15
 
 // Temperatures (celsius degrees)
-#define LIMIT_FEVER             20
+#define LIMIT_FEVER             30
 
 // ESP32-specific
 #ifdef ESP32

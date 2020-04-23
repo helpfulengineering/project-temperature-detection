@@ -9,10 +9,10 @@ typedef enum {
 } indicator;
 
 typedef enum {
-    STATUS_FEVER_LOW = INDICATOR_ORANGE || INDICATOR_GREEN,
-    STATUS_FEVER_HIGH = INDICATOR_ORANGE || INDICATOR_RED,
+    STATUS_FEVER_LOW = INDICATOR_GREEN,
+    STATUS_FEVER_HIGH = INDICATOR_RED,
     STATUS_DISTANCE_RIGHT = INDICATOR_GREEN,
-    STATUS_DISTANCE_WRONG = INDICATOR_RED,
+    STATUS_DISTANCE_WRONG = INDICATOR_ORANGE,
     STATUS_TRIGGER = STATUS_DISTANCE_RIGHT,
     STATUS_OFF = 0
 } status;
@@ -63,8 +63,8 @@ void loop() {
         (temperature > LIMIT_FEVER)
         ? STATUS_FEVER_HIGH : STATUS_FEVER_LOW
     );
-
-
+    (temperature > LIMIT_FEVER) ? Serial.println("Fever detected!") : Serial.println("You're OK!");
+    delay(DISPLAY_TIME);
 
     await_status(STATUS_OFF);
 }
@@ -74,7 +74,7 @@ void await_status(status desired_status) {
     status current_status;
     do {
         current_status = (
-            (digitalRead(BUTTON_PIN) == LOW)
+            (digitalRead(BUTTON_PIN) == BUTTON_PIN_ON)
             ? STATUS_TRIGGER : detect_user()
         );
         display_status(current_status);
@@ -139,17 +139,17 @@ float measure_temperature(size_t samples, int interval) {
 void display_status(status indicators) {
     digitalWrite(
         RED_INDICATOR_PIN,
-        (indicators && INDICATOR_RED)
+        (indicators == INDICATOR_RED)
         ? HIGH - RED_INDICATOR_OFF : RED_INDICATOR_OFF - LOW
     );
     digitalWrite(
         ORANGE_INDICATOR_PIN,
-        (indicators && INDICATOR_ORANGE)
+        (indicators == INDICATOR_ORANGE)
         ? HIGH - ORANGE_INDICATOR_OFF : ORANGE_INDICATOR_OFF - LOW
     );
     digitalWrite(
         GREEN_INDICATOR_PIN,
-        (indicators && INDICATOR_GREEN)
+        (indicators == INDICATOR_GREEN)
         ? HIGH - GREEN_INDICATOR_OFF : GREEN_INDICATOR_OFF - LOW
     );
 }
