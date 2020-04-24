@@ -148,7 +148,7 @@ float measure_temperature(size_t samples, int interval) {
 
 void display_status(status indicators) {
     #ifdef INVERT_INDICATORS
-        indicators = ~indicators;
+        indicators = (status)~indicators;
     #endif
     digitalWrite(
         RED_INDICATOR_PIN,
