@@ -7,9 +7,7 @@
 
 // Times (bauds and milliseconds)
 #define SERIAL_MONITOR_SPEED        9600
-#ifndef SENSOR_STABILIZATION_TIME
-#define SENSOR_STABILIZATION_TIME   3500
-#endif
+#define SENSOR_STABILIZATION_TIME   100
 #define TIME_BETWEEN_READINGS       500
 #define DISPLAY_TIME                2000
 
