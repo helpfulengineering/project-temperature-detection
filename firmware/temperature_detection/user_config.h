@@ -2,13 +2,14 @@
 #define USER_CONFIG_H
 
 // Switches
-#define ENABLE_SONAR
+// #define ENABLE_SONAR 
 // #define INVERT_INDICATORS
-// #define INVERT_BUTTON
 
 // Times (bauds and milliseconds)
 #define SERIAL_MONITOR_SPEED        9600
+#ifndef SENSOR_STABILIZATION_TIME
 #define SENSOR_STABILIZATION_TIME   3500
+#endif
 #define TIME_BETWEEN_READINGS       500
 #define DISPLAY_TIME                2000
 

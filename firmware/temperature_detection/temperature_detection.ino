@@ -74,17 +74,10 @@ void loop() {
 
 void await_status(status desired_status) {
     status current_status;
-    int trigger_level;
-
-    #ifdef INVERT_BUTTON
-        trigger_level = LOW;
-    #else
-        trigger_level = HIGH;
-    #endif
 
     do {
         current_status = (
-            (digitalRead(BUTTON_PIN) == trigger_level)
+            (digitalRead(BUTTON_PIN) == LOW)
             ? STATUS_TRIGGER : detect_user()
         );
         display_status(current_status);
