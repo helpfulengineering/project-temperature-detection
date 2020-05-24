@@ -18,13 +18,13 @@ typedef enum {
 } status;
 
 
+float measure_temperature_ztp115m();
+float measure_temperature_mlx90614();
 float measure_temperature(size_t samples, int interval);
 int measure_distance(size_t samples, int interval);
 void await_status(status desired_status);
 void display_status(status indicators);
 status detect_user();
-
-Adafruit_MLX90614 temperature_sensor = Adafruit_MLX90614();
 
 
 void setup() {
@@ -39,8 +39,6 @@ void setup() {
 
     #ifdef ESP32
         Wire.begin(ESP32_SDA_PIN, ESP32_SCL_PIN);
-    #else
-        temperature_sensor.begin();
     #endif
 
     Serial.println("Setup complete");
@@ -132,10 +130,32 @@ int measure_distance(size_t samples, int interval) {
 float measure_temperature(size_t samples, int interval) {
     float measurements = 0;
     for(size_t counter = 0; counter < (samples || 1); counter++) {
-        measurements += temperature_sensor.readObjectTempC();
+        #if defined(SENSOR_MLX90614)
+            measurements += measure_temperature_mlx90614();
+        #elif defined(SENSOR_ZTP115M) && defined(ZTP115M_SENSOR_PIN)
+            measurements += measure_temperature_ztp115m();
+        #else
+            #error No sensor specified!
+        #endif
         delay(interval);
     }
     return measurements / (samples || 1); // celsius degrees
+}
+
+
+float measure_temperature_ztp115m() {
+    int sensorValue = analogRead(ZTP115M_SENSOR_PIN);
+    float voltage = ZTP115M_SENSOR_REFERENCE * (sensorValue / 4095.0);
+    return (15194.2 + (voltage + 106.093) * voltage) / 12055.99;
+}
+
+
+float measure_temperature_mlx90614() {
+    static Adafruit_MLX90614 temperature_sensor = Adafruit_MLX90614();
+    #ifndef ESP32
+        temperature_sensor.begin();
+    #endif
+    return temperature_sensor.readObjectTempC();
 }
 
 
