@@ -4,6 +4,9 @@
 // Switches
 // #define ENABLE_SONAR 
 // #define INVERT_INDICATORS
+// #define SENSOR_ZTP115M // See also ZTP115M_SENSOR_* defines
+#define SENSOR_MLX90614
+
 
 // Times (bauds and milliseconds)
 #define SERIAL_MONITOR_SPEED        9600
@@ -42,6 +45,12 @@
 #endif
 #ifndef BUTTON_PIN
 #define BUTTON_PIN                  7 // 37 to use BUTTON A on M5StickC
+#endif
+#ifndef ZTP115M_SENSOR_PIN
+#define ZTP115M_SENSOR_PIN          36
+#endif
+#ifndef ZTP115M_SENSOR_REFERENCE
+#define ZTP115M_SENSOR_REFERENCE    3.3
 #endif
 #ifdef ESP32
 #define ESP32_SDA_PIN               0
