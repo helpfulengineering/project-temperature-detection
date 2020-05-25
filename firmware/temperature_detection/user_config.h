@@ -49,12 +49,17 @@
 #ifndef ZTP115M_SENSOR_PIN
 #define ZTP115M_SENSOR_PIN          36
 #endif
-#ifndef ZTP115M_SENSOR_REFERENCE
-#define ZTP115M_SENSOR_REFERENCE    3.3
-#endif
 #ifdef ESP32
 #define ESP32_SDA_PIN               0
 #define ESP32_SCL_PIN               26
+#endif
+
+// ZTP115M-specific ADC settings
+#ifndef ZTP115M_SENSOR_REFERENCE
+#define ZTP115M_SENSOR_REFERENCE    3.3
+#endif
+#ifndef ZTP115M_SENSOR_STEPS
+#define ZTP115M_SENSOR_STEPS        4096
 #endif
 
 #endif
