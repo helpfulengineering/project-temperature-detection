@@ -5,6 +5,9 @@
 // #define ENABLE_SONAR 
 // #define INVERT_INDICATORS
 
+// Boards
+// #define M5STICKC 
+
 // Times (bauds and milliseconds)
 #define SERIAL_MONITOR_SPEED        9600
 #define SENSOR_STABILIZATION_TIME   100
