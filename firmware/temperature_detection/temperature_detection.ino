@@ -162,22 +162,21 @@ void display_status(status indicators) {
             (indicators & INDICATOR_GREEN)
             ? TFT_GREEN : TFT_BLACK
         );
-    #else
-        digitalWrite(
-            RED_INDICATOR_PIN,
-            (indicators & INDICATOR_RED)
-            ? HIGH : LOW
-        );
-        digitalWrite(
-            ORANGE_INDICATOR_PIN,
-            (indicators & INDICATOR_ORANGE)
-            ? HIGH : LOW
-        );
-        digitalWrite(
-            GREEN_INDICATOR_PIN,
-            (indicators & INDICATOR_GREEN)
-            ? HIGH : LOW
-        );
     #endif
+    digitalWrite(
+        RED_INDICATOR_PIN,
+        (indicators & INDICATOR_RED)
+        ? HIGH : LOW
+    );
+    digitalWrite(
+        ORANGE_INDICATOR_PIN,
+        (indicators & INDICATOR_ORANGE)
+        ? HIGH : LOW
+    );
+    digitalWrite(
+        GREEN_INDICATOR_PIN,
+        (indicators & INDICATOR_GREEN)
+        ? HIGH : LOW
+    );
 }
 
