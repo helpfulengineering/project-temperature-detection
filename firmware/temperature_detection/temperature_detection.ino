@@ -11,8 +11,8 @@ typedef enum {
 } indicator;
 
 typedef enum {
-    STATUS_FEVER_LOW = INDICATOR_GREEN,
-    STATUS_FEVER_HIGH = INDICATOR_RED,
+    STATUS_FEVER_LOW = INDICATOR_ORANGE | INDICATOR_GREEN,
+    STATUS_FEVER_HIGH = INDICATOR_ORANGE | INDICATOR_RED,
     STATUS_DISTANCE_RIGHT = INDICATOR_GREEN,
     STATUS_DISTANCE_WRONG = INDICATOR_ORANGE,
     STATUS_TRIGGER = STATUS_DISTANCE_RIGHT,
@@ -30,22 +30,18 @@ Adafruit_MLX90614 temperature_sensor = Adafruit_MLX90614();
 
 
 void setup() {
-
-    #ifdef M5STICKC
-        Serial.println("Setup M5StickC");
-        M5.begin();
-        M5.Lcd.fillScreen(TFT_WHITE);
-    #else
-        pinMode(ULTRASOUND_ECHO_PIN, INPUT);
-        pinMode(ULTRASOUND_TRIGGER_PIN, OUTPUT);
-        pinMode(GREEN_INDICATOR_PIN, OUTPUT);
-        pinMode(ORANGE_INDICATOR_PIN, OUTPUT);
-        pinMode(RED_INDICATOR_PIN, OUTPUT);
-    #endif
-
+    Serial.begin(SERIAL_MONITOR_SPEED);
+    
+    pinMode(ULTRASOUND_ECHO_PIN, INPUT);
+    pinMode(ULTRASOUND_TRIGGER_PIN, OUTPUT);
+    pinMode(GREEN_INDICATOR_PIN, OUTPUT);
+    pinMode(ORANGE_INDICATOR_PIN, OUTPUT);
+    pinMode(RED_INDICATOR_PIN, OUTPUT);
     pinMode(BUTTON_PIN, INPUT_PULLUP);
 
-    Serial.begin(SERIAL_MONITOR_SPEED);
+    #ifdef M5STICKC
+        M5.begin();
+    #endif
 
     #ifdef ESP32
         Wire.begin(ESP32_SDA_PIN, ESP32_SCL_PIN);
@@ -154,26 +150,34 @@ void display_status(status indicators) {
         indicators = (status)~indicators;
     #endif
     #ifdef M5STICKC
-    (indicators & INDICATOR_RED)
-        ? M5.Lcd.fillScreen(TFT_RED) : ((indicators & INDICATOR_ORANGE)
-            ? M5.Lcd.fillScreen(TFT_ORANGE) : ((indicators & INDICATOR_GREEN)
-                ? M5.Lcd.fillScreen(TFT_GREEN) : M5.Lcd.fillScreen(TFT_WHITE)));
+        M5.Lcd.fillRect(0, 0, 106, 240,
+            (indicators & INDICATOR_RED)
+            ? TFT_RED : TFT_BLACK
+        );
+        M5.Lcd.fillRect(107, 0, 213, 240,
+            (indicators & INDICATOR_ORANGE)
+            ? TFT_ORANGE : TFT_BLACK
+        );
+        M5.Lcd.fillRect(214, 0, 320, 240,
+            (indicators & INDICATOR_GREEN)
+            ? TFT_GREEN : TFT_BLACK
+        );
     #else
-    digitalWrite(
-        RED_INDICATOR_PIN,
-        (indicators & INDICATOR_RED)
-        ? HIGH : LOW
-    );
-    digitalWrite(
-        ORANGE_INDICATOR_PIN,
-        (indicators & INDICATOR_ORANGE)
-        ? HIGH : LOW
-    );
-    digitalWrite(
-        GREEN_INDICATOR_PIN,
-        (indicators & INDICATOR_GREEN)
-        ? HIGH : LOW
-    );
+        digitalWrite(
+            RED_INDICATOR_PIN,
+            (indicators & INDICATOR_RED)
+            ? HIGH : LOW
+        );
+        digitalWrite(
+            ORANGE_INDICATOR_PIN,
+            (indicators & INDICATOR_ORANGE)
+            ? HIGH : LOW
+        );
+        digitalWrite(
+            GREEN_INDICATOR_PIN,
+            (indicators & INDICATOR_GREEN)
+            ? HIGH : LOW
+        );
     #endif
 }
 
