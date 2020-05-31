@@ -32,12 +32,20 @@ Adafruit_MLX90614 temperature_sensor = Adafruit_MLX90614();
 void setup() {
     Serial.begin(SERIAL_MONITOR_SPEED);
     
-    pinMode(ULTRASOUND_ECHO_PIN, INPUT);
-    pinMode(ULTRASOUND_TRIGGER_PIN, OUTPUT);
-    pinMode(GREEN_INDICATOR_PIN, OUTPUT);
-    pinMode(ORANGE_INDICATOR_PIN, OUTPUT);
-    pinMode(RED_INDICATOR_PIN, OUTPUT);
-    pinMode(BUTTON_PIN, INPUT_PULLUP);
+    #ifdef ENABLE_SONAR
+        pinMode(ULTRASOUND_ECHO_PIN, INPUT);
+        pinMode(ULTRASOUND_TRIGGER_PIN, OUTPUT);
+    #endif
+
+    #ifdef ENABLE_INDICATORS
+        pinMode(GREEN_INDICATOR_PIN, OUTPUT);
+        pinMode(ORANGE_INDICATOR_PIN, OUTPUT);
+        pinMode(RED_INDICATOR_PIN, OUTPUT);
+    #endif
+
+    #ifdef ENABLE_BUTTON
+        pinMode(BUTTON_PIN, INPUT_PULLUP);
+    #endif
 
     #ifdef M5STICKC
         M5.begin();
@@ -150,15 +158,15 @@ void display_status(status indicators) {
         indicators = (status)~indicators;
     #endif
     #ifdef M5STICKC
-        M5.Lcd.fillRect(0, 0, 106, 240,
+        M5.Lcd.fillRect(0, 0, 80, 53,
             (indicators & INDICATOR_RED)
             ? TFT_RED : TFT_BLACK
         );
-        M5.Lcd.fillRect(107, 0, 213, 240,
+        M5.Lcd.fillRect(0, 53, 80, 53,
             (indicators & INDICATOR_ORANGE)
             ? TFT_ORANGE : TFT_BLACK
         );
-        M5.Lcd.fillRect(214, 0, 320, 240,
+        M5.Lcd.fillRect(0, 106, 80, 54,
             (indicators & INDICATOR_GREEN)
             ? TFT_GREEN : TFT_BLACK
         );
