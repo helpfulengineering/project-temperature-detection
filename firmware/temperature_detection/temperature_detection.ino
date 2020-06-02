@@ -146,7 +146,17 @@ float measure_temperature(size_t samples, int interval) {
 float measure_temperature_ztp115m() {
     int value = analogRead(ZTP115M_SENSOR_PIN);
     float voltage = ZTP115M_SENSOR_REFERENCE * (value / ZTP115M_SENSOR_STEPS);
-    return (15194.2 + (voltage + 106.093) * voltage) / 12055.99;
+    return (
+        - 3484.051933 * pow(voltage, 0)
+        + 11296.70621 * pow(voltage, 1)
+        - 15853.08557 * pow(voltage, 2)
+        + 12490.72137 * pow(voltage, 3)
+        - 5998.724365 * pow(voltage, 4)
+        + 1797.550087 * pow(voltage, 5)
+        - 328.5445919 * pow(voltage, 6)
+        + 33.53566265 * pow(voltage, 7)
+        - 1.465912126 * pow(voltage, 8)
+    );
 }
 
 
