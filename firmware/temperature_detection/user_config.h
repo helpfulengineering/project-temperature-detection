@@ -55,11 +55,24 @@
 #endif
 
 // ZTP115M-specific ADC settings
+#ifdef ESP32
+
 #ifndef ZTP115M_SENSOR_REFERENCE
 #define ZTP115M_SENSOR_REFERENCE    3.3
 #endif
 #ifndef ZTP115M_SENSOR_STEPS
 #define ZTP115M_SENSOR_STEPS        4096
+#endif
+
+#else
+
+#ifndef ZTP115M_SENSOR_REFERENCE
+#define ZTP115M_SENSOR_REFERENCE    5
+#endif
+#ifndef ZTP115M_SENSOR_STEPS
+#define ZTP115M_SENSOR_STEPS        1024 // Might not offer enough resolution.
+#endif
+
 #endif
 
 #endif
