@@ -8,6 +8,22 @@
 #define SENSOR_MLX90614
 
 
+// Boards
+// #define M5STICKC 
+// #define ANOTHER 
+
+#ifdef M5STICKC
+    #define ENABLE_BUTTON
+    #undef ENABLE_INDICATORS
+    #undef ENABLE_SONAR
+#endif
+
+#ifdef ANOTHER
+    //#define ENABLE_BUTTON
+    #define ENABLE_INDICATORS
+    #define ENABLE_SONAR
+#endif
+
 // Times (bauds and milliseconds)
 #define SERIAL_MONITOR_SPEED        9600
 #define SENSOR_STABILIZATION_TIME   100

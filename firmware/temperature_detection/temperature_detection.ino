@@ -1,6 +1,8 @@
 #include "user_config.h"
 #include <Adafruit_MLX90614.h>
-
+#ifdef M5STICKC
+#include <M5StickC.h>
+#endif
 
 typedef enum {
     INDICATOR_RED = 1 << 0,
@@ -28,14 +30,26 @@ status detect_user();
 
 
 void setup() {
-    pinMode(ULTRASOUND_ECHO_PIN, INPUT);
-    pinMode(ULTRASOUND_TRIGGER_PIN, OUTPUT);
-    pinMode(GREEN_INDICATOR_PIN, OUTPUT);
-    pinMode(ORANGE_INDICATOR_PIN, OUTPUT);
-    pinMode(RED_INDICATOR_PIN, OUTPUT);
-    pinMode(BUTTON_PIN, INPUT_PULLUP);
-
     Serial.begin(SERIAL_MONITOR_SPEED);
+    
+    #ifdef ENABLE_SONAR
+        pinMode(ULTRASOUND_ECHO_PIN, INPUT);
+        pinMode(ULTRASOUND_TRIGGER_PIN, OUTPUT);
+    #endif
+
+    #ifdef ENABLE_INDICATORS
+        pinMode(GREEN_INDICATOR_PIN, OUTPUT);
+        pinMode(ORANGE_INDICATOR_PIN, OUTPUT);
+        pinMode(RED_INDICATOR_PIN, OUTPUT);
+    #endif
+
+    #ifdef ENABLE_BUTTON
+        pinMode(BUTTON_PIN, INPUT_PULLUP);
+    #endif
+
+    #ifdef M5STICKC
+        M5.begin();
+    #endif
 
     #ifdef ESP32
         Wire.begin(ESP32_SDA_PIN, ESP32_SCL_PIN);
@@ -173,6 +187,20 @@ void display_status(status indicators) {
     #ifdef INVERT_INDICATORS
         indicators = (status)~indicators;
     #endif
+    #ifdef M5STICKC
+        M5.Lcd.fillRect(0, 0, 80, 53,
+            (indicators & INDICATOR_RED)
+            ? TFT_RED : TFT_BLACK
+        );
+        M5.Lcd.fillRect(0, 53, 80, 53,
+            (indicators & INDICATOR_ORANGE)
+            ? TFT_ORANGE : TFT_BLACK
+        );
+        M5.Lcd.fillRect(0, 106, 80, 54,
+            (indicators & INDICATOR_GREEN)
+            ? TFT_GREEN : TFT_BLACK
+        );
+    #endif
     digitalWrite(
         RED_INDICATOR_PIN,
         (indicators & INDICATOR_RED)
@@ -189,3 +217,4 @@ void display_status(status indicators) {
         ? HIGH : LOW
     );
 }
+
