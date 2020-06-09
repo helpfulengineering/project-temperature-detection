@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="1468.8px" height="864px" viewBox="0 0 1468.8 864" style="enable-background:new 0 0 1468.8 864;" xml:space="preserve">
+<style type="text/css">
+	.st0{display:none;}
+	.st1{display:inline;}
+	.st2{fill:none;stroke:#2BACE2;stroke-width:0.709;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st3{fill:none;stroke:#EC2227;stroke-width:0.709;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st4{fill:none;stroke:#2BACE2;stroke-width:0.704;stroke-linecap:round;stroke-linejoin:round;}
+	.st5{fill:none;stroke:#2BACE2;stroke-width:0.704;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:11.8892,11.8892;}
+	.st6{fill:none;stroke:#2BACE2;stroke-width:0.704;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:12.0417,12.0417;}
+	.st7{fill:none;stroke:#010101;stroke-width:0.709;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st8{fill:none;stroke:#ED1C24;stroke-width:0.709;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+</style>
+<g id="Layer_1" class="st0">
+	<g class="st1">
+		
+			<rect x="338.4" y="-270" transform="matrix(-1.836970e-16 1 -1 -1.836970e-16 1166.4 -302.4)" class="st2" width="792" height="1404"/>
+		
+			<rect x="302.4" y="-302.4" transform="matrix(-1.836970e-16 1 -1 -1.836970e-16 1166.4 -302.4)" class="st3" width="864" height="1468.8"/>
+		<g>
+			<g>
+				<polyline class="st4" points="42,824.4 36,824.4 36,818.4 				"/>
+				<line class="st5" x1="36" y1="806.51" x2="36" y2="51.54"/>
+				<polyline class="st4" points="36,45.6 36,39.6 42,39.6 				"/>
+				<line class="st6" x1="54.04" y1="39.6" x2="1420.78" y2="39.6"/>
+				<polyline class="st4" points="1426.8,39.6 1432.8,39.6 1432.8,45.6 				"/>
+				<line class="st5" x1="1432.8" y1="57.49" x2="1432.8" y2="812.46"/>
+				<polyline class="st4" points="1432.8,818.4 1432.8,824.4 1426.8,824.4 				"/>
+				<line class="st6" x1="1414.76" y1="824.4" x2="48.02" y2="824.4"/>
+			</g>
+		</g>
+	</g>
+</g>
+<g id="Layer_2">
+	<g>
+		<line class="st7" x1="983.87" y1="709.8" x2="1012.17" y2="709.8"/>
+		<line class="st7" x1="983.87" y1="709.8" x2="983.87" y2="681.4"/>
+		<line class="st7" x1="484.94" y1="709.8" x2="484.94" y2="681.4"/>
+		<line class="st7" x1="975.37" y1="709.8" x2="975.37" y2="681.4"/>
+		<line class="st7" x1="493.44" y1="709.8" x2="975.37" y2="709.8"/>
+		<line class="st7" x1="493.44" y1="709.8" x2="493.44" y2="681.4"/>
+		<line class="st7" x1="484.94" y1="681.4" x2="493.44" y2="681.4"/>
+		<line class="st7" x1="456.64" y1="709.8" x2="484.94" y2="709.8"/>
+		<line class="st7" x1="1012.17" y1="709.8" x2="1012.17" y2="191"/>
+		<line class="st7" x1="1012.17" y1="191" x2="983.87" y2="191"/>
+		<line class="st7" x1="484.94" y1="154.2" x2="484.94" y2="191"/>
+		<line class="st7" x1="484.94" y1="191" x2="456.64" y2="191"/>
+		<line class="st7" x1="456.64" y1="191" x2="456.64" y2="709.8"/>
+		<line class="st7" x1="975.37" y1="681.4" x2="983.87" y2="681.4"/>
+		<line class="st7" x1="983.87" y1="191" x2="983.87" y2="154.2"/>
+		<line class="st7" x1="983.87" y1="154.2" x2="484.94" y2="154.2"/>
+	</g>
+	<g>
+		<line class="st8" x1="975.37" y1="191" x2="493.44" y2="191"/>
+		<line class="st8" x1="493.44" y1="191" x2="493.44" y2="644.6"/>
+		<line class="st8" x1="975.37" y1="644.6" x2="975.37" y2="191"/>
+		<line class="st8" x1="493.44" y1="644.6" x2="975.37" y2="644.6"/>
+	</g>
+</g>
+</svg>
