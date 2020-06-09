@@ -1,1 +1,1 @@
-delete
+print this on white paper, cut along the red line, laminate it, cut as close to edge as possible. Tape along top and bottom edges against the INSIDE of the clear window (use the etched border of the clear window as a positioning guide).
