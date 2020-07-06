@@ -5,18 +5,23 @@
 #endif
 
 typedef enum {
-    INDICATOR_RED = 1 << 0,
-    INDICATOR_ORANGE = 1 << 1,
-    INDICATOR_GREEN = 1 << 2
+    INDICATOR_TEMPERATURE_LOW  = 1 << 0,
+    INDICATOR_TEMPERATURE_MID  = 1 << 1,
+    INDICATOR_TEMPERATURE_HIGH = 1 << 2,
+    INDICATOR_DISTANCE_FARTHER = 1 << 3,
+    INDICATOR_DISTANCE_STOP    = 1 << 4,
+    INDICATOR_DISTANCE_CLOSER  = 1 << 5
 } indicator;
 
 typedef enum {
-    STATUS_FEVER_LOW = INDICATOR_ORANGE | INDICATOR_GREEN,
-    STATUS_FEVER_HIGH = INDICATOR_ORANGE | INDICATOR_RED,
-    STATUS_DISTANCE_RIGHT = INDICATOR_GREEN,
-    STATUS_DISTANCE_WRONG = INDICATOR_ORANGE,
-    STATUS_TRIGGER = STATUS_DISTANCE_RIGHT,
-    STATUS_OFF = 0
+    STATUS_OFF     = 0,
+    STATUS_TRIGGER = INDICATOR_DISTANCE_STOP,
+    STATUS_FEVER_LOW  = INDICATOR_TEMPERATURE_LOW,
+    STATUS_FEVER_MID  = INDICATOR_TEMPERATURE_MID,
+    STATUS_FEVER_HIGH = INDICATOR_TEMPERATURE_HIGH,
+    STATUS_DISTANCE_FARTHER = INDICATOR_DISTANCE_FARTHER,
+    STATUS_DISTANCE_STOP    = INDICATOR_DISTANCE_STOP,
+    STATUS_DISTANCE_CLOSER  = INDICATOR_DISTANCE_CLOSER
 } status;
 
 
@@ -31,16 +36,19 @@ status detect_user();
 
 void setup() {
     Serial.begin(SERIAL_MONITOR_SPEED);
-    
+
     #ifdef ENABLE_SONAR
         pinMode(ULTRASOUND_ECHO_PIN, INPUT);
         pinMode(ULTRASOUND_TRIGGER_PIN, OUTPUT);
     #endif
 
     #ifdef ENABLE_INDICATORS
-        pinMode(GREEN_INDICATOR_PIN, OUTPUT);
-        pinMode(ORANGE_INDICATOR_PIN, OUTPUT);
-        pinMode(RED_INDICATOR_PIN, OUTPUT);
+        pinMode(TEMPERATURE_LOW_PIN, OUTPUT);
+        pinMode(TEMPERATURE_MID_PIN, OUTPUT);
+        pinMode(TEMPERATURE_HIGH_PIN, OUTPUT);
+        pinMode(DISTANCE_FARTHER_PIN, OUTPUT);
+        pinMode(DISTANCE_STOP_PIN, OUTPUT);
+        pinMode(DISTANCE_CLOSER_PIN, OUTPUT);
     #endif
 
     #ifdef ENABLE_BUTTON
@@ -74,6 +82,9 @@ void loop() {
     if(temperature > LIMIT_FEVER) {
         display_status(STATUS_FEVER_HIGH);
         Serial.println("Fever detected");
+    } else if(temperature > WARNING_FEVER) {
+        display_status(STATUS_FEVER_MID);
+        Serial.println("Fever probably detected");
     } else {
         display_status(STATUS_FEVER_LOW);
         Serial.println("No fever detected");
@@ -110,12 +121,15 @@ status detect_user() {
         if (distance > OFF_DISTANCE) {
             Serial.println("User is not present");
             return STATUS_OFF;
-        } else if (distance > DETECTION_DISTANCE) {
+        } else if (distance > DETECTION_DISTANCE + THRESHOLD_DISTANCE / 2) {
             Serial.println("User needs to get closer");
-            return STATUS_DISTANCE_WRONG;
-        } else if (distance <= DETECTION_DISTANCE) {
-            Serial.println("User is at a good distance");
-            return STATUS_DISTANCE_RIGHT;
+            return STATUS_DISTANCE_CLOSER;
+        } else if (distance < DETECTION_DISTANCE - THRESHOLD_DISTANCE / 2) {
+            Serial.println("User needs to get farther");
+            return STATUS_DISTANCE_FARTHER;
+        } else {
+            Serial.println("User is at a good distance; stay still");
+            return STATUS_DISTANCE_STOP;
         }
     #else
         return STATUS_OFF;
@@ -188,33 +202,59 @@ void display_status(status indicators) {
         indicators = (status)~indicators;
     #endif
     #ifdef M5STICKC
-        M5.Lcd.fillRect(0, 0, 80, 53,
-            (indicators & INDICATOR_RED)
+        M5.Lcd.fillRect(0, 0, 40, 53,
+            (indicators & INDICATOR_TEMPERATURE_HIGH)
             ? TFT_RED : TFT_BLACK
         );
-        M5.Lcd.fillRect(0, 53, 80, 53,
-            (indicators & INDICATOR_ORANGE)
+        M5.Lcd.fillRect(0, 53, 40, 53,
+            (indicators & INDICATOR_TEMPERATURE_MID)
             ? TFT_ORANGE : TFT_BLACK
         );
-        M5.Lcd.fillRect(0, 106, 80, 54,
-            (indicators & INDICATOR_GREEN)
+        M5.Lcd.fillRect(0, 106, 40, 54,
+            (indicators & INDICATOR_TEMPERATURE_LOW)
             ? TFT_GREEN : TFT_BLACK
+        );
+        M5.Lcd.fillRect(40, 0, 80, 53,
+            (indicators & INDICATOR_DISTANCE_FARTHER)
+            ? TFT_ORANGE : TFT_BLACK
+        );
+        M5.Lcd.fillRect(40, 53, 80, 53,
+            (indicators & INDICATOR_DISTANCE_STOP)
+            ? TFT_GREEN : TFT_BLACK
+        );
+        M5.Lcd.fillRect(40, 106, 80, 54,
+            (indicators & INDICATOR_DISTANCE_CLOSER)
+            ? TFT_ORANGE : TFT_BLACK
         );
     #endif
     digitalWrite(
-        RED_INDICATOR_PIN,
-        (indicators & INDICATOR_RED)
+        TEMPERATURE_HIGH_PIN,
+        (indicators & INDICATOR_TEMPERATURE_HIGH)
         ? HIGH : LOW
     );
     digitalWrite(
-        ORANGE_INDICATOR_PIN,
-        (indicators & INDICATOR_ORANGE)
+        TEMPERATURE_MID_PIN,
+        (indicators & INDICATOR_TEMPERATURE_MID)
         ? HIGH : LOW
     );
     digitalWrite(
-        GREEN_INDICATOR_PIN,
-        (indicators & INDICATOR_GREEN)
+        TEMPERATURE_LOW_PIN,
+        (indicators & INDICATOR_TEMPERATURE_LOW)
+        ? HIGH : LOW
+    );
+    digitalWrite(
+        DISTANCE_FARTHER_PIN,
+        (indicators & INDICATOR_DISTANCE_FARTHER)
+        ? HIGH : LOW
+    );
+    digitalWrite(
+        DISTANCE_STOP_PIN,
+        (indicators & INDICATOR_DISTANCE_STOP)
+        ? HIGH : LOW
+    );
+    digitalWrite(
+        DISTANCE_CLOSER_PIN,
+        (indicators & INDICATOR_DISTANCE_CLOSER)
         ? HIGH : LOW
     );
 }
-

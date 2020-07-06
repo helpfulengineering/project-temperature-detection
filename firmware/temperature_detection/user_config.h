@@ -2,15 +2,15 @@
 #define USER_CONFIG_H
 
 // Switches
-// #define ENABLE_SONAR 
+// #define ENABLE_SONAR
 // #define INVERT_INDICATORS
 // #define SENSOR_ZTP115M // See also ZTP115M_SENSOR_* defines
 #define SENSOR_MLX90614
 
 
 // Boards
-// #define M5STICKC 
-// #define ANOTHER 
+// #define M5STICKC
+// #define ANOTHER
 
 #ifdef M5STICKC
     #define ENABLE_BUTTON
@@ -39,9 +39,11 @@
 // Distances (centimeters)
 #define OFF_DISTANCE                30
 #define DETECTION_DISTANCE          15
+#define THRESHOLD_DISTANCE          3
 
 // Temperatures (celsius degrees)
 #define LIMIT_FEVER                 30
+#define WARNING_FEVER               28
 
 // Pins
 #ifndef ULTRASOUND_TRIGGER_PIN
@@ -50,14 +52,23 @@
 #ifndef ULTRASOUND_ECHO_PIN
 #define ULTRASOUND_ECHO_PIN         3
 #endif
-#ifndef GREEN_INDICATOR_PIN
-#define GREEN_INDICATOR_PIN         4
+#ifndef TEMPERATURE_LOW_PIN
+#define TEMPERATURE_LOW_PIN         4
 #endif
-#ifndef ORANGE_INDICATOR_PIN
-#define ORANGE_INDICATOR_PIN        5
+#ifndef TEMPERATURE_MID_PIN
+#define TEMPERATURE_MID_PIN         5
 #endif
-#ifndef RED_INDICATOR_PIN
-#define RED_INDICATOR_PIN           6 // 13 to use Arduino Uno builtin LED
+#ifndef TEMPERATURE_HIGH_PIN
+#define TEMPERATURE_HIGH_PIN        6
+#endif
+#ifndef DISTANCE_FARTHER_PIN
+#define DISTANCE_FARTHER_PIN        8 // FIXME: why skip the seventh pin?
+#endif
+#ifndef DISTANCE_STOP_PIN
+#define DISTANCE_STOP_PIN           9
+#endif
+#ifndef DISTANCE_CLOSER_PIN
+#define DISTANCE_CLOSER_PIN         10
 #endif
 #ifndef BUTTON_PIN
 #define BUTTON_PIN                  7 // 37 to use BUTTON A on M5StickC
