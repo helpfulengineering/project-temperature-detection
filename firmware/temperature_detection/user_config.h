@@ -14,18 +14,19 @@
 
 #ifdef M5STICKC
     #define ENABLE_BUTTON
+    #define INVERT_INDICATORS
     #undef ENABLE_INDICATORS
     #undef ENABLE_SONAR
 #endif
 
 #ifdef ANOTHER
-    //#define ENABLE_BUTTON
+    #define ENABLE_BUTTON
     #define ENABLE_INDICATORS
     #define ENABLE_SONAR
 #endif
 
 // Times (bauds and milliseconds)
-#define SERIAL_MONITOR_SPEED        9600
+#define SERIAL_MONITOR_SPEED        115200
 #define SENSOR_STABILIZATION_TIME   100
 #define TIME_BETWEEN_READINGS       500
 #define DISPLAY_TIME                2000
