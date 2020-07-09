@@ -38,13 +38,13 @@
 #define DISTANCE_INTERVAL           100 // >60 as per Sparkfun HC-SR04 datasheet
 
 // Distances (centimeters)
-#define OFF_DISTANCE                30
-#define DETECTION_DISTANCE          15
-#define THRESHOLD_DISTANCE          3
+#define OFF_DISTANCE                100
+#define THRESHOLD_DISTANCE          7
+#define DETECTION_DISTANCE          3
 
 // Temperatures (celsius degrees)
-#define LIMIT_FEVER                 30
-#define WARNING_FEVER               28
+#define LIMIT_FEVER                 33
+#define WARNING_FEVER               31
 
 // Pins
 #ifndef ULTRASOUND_TRIGGER_PIN
@@ -54,22 +54,22 @@
 #define ULTRASOUND_ECHO_PIN         3
 #endif
 #ifndef TEMPERATURE_LOW_PIN
-#define TEMPERATURE_LOW_PIN         4
+#define TEMPERATURE_LOW_PIN         11
 #endif
 #ifndef TEMPERATURE_MID_PIN
-#define TEMPERATURE_MID_PIN         5
+#define TEMPERATURE_MID_PIN         12
 #endif
 #ifndef TEMPERATURE_HIGH_PIN
-#define TEMPERATURE_HIGH_PIN        6
+#define TEMPERATURE_HIGH_PIN        13
 #endif
 #ifndef DISTANCE_FARTHER_PIN
 #define DISTANCE_FARTHER_PIN        8 // FIXME: why skip the seventh pin?
 #endif
 #ifndef DISTANCE_STOP_PIN
-#define DISTANCE_STOP_PIN           9
+#define DISTANCE_STOP_PIN           10
 #endif
 #ifndef DISTANCE_CLOSER_PIN
-#define DISTANCE_CLOSER_PIN         10
+#define DISTANCE_CLOSER_PIN         9
 #endif
 #ifndef BUTTON_PIN
 #define BUTTON_PIN                  7 // 37 to use BUTTON A on M5StickC
