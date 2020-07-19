@@ -1,0 +1,10 @@
+(module 1X01-#6_MACHINE (layer F.Cu) (tedit 0)
+  (fp_text reference U$66 (at 0 0) (layer F.SilkS) hide
+    (effects (font (size 1.27 1.27) (thickness 0.15)))
+  )
+  (fp_text value CONN_01 (at 0 0) (layer F.SilkS) hide
+    (effects (font (size 1.27 1.27) (thickness 0.15)))
+  )
+  (pad 1 thru_hole circle (at 0 0) (size 6.604 6.604) (drill 3.6576) (layers *.Cu *.Mask)
+    (solder_mask_margin 0.0762))
+)
